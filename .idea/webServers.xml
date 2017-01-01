@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="WebServers">
+    <option name="servers">
+      <webServer id="813effbf-5258-4dea-9298-331cc94c3552" name="godness" url="http://47.90.37.248">
+        <fileTransfer host="47.90.37.248" port="22" rootFolder="/home/webroot/godness" accessType="SFTP" password="dfdddfdfdf9fdf98df9adf9bdf99df9bdf9edf8bdfeadf89dffbdffddfef" username="root">
+          <advancedOptions>
+            <advancedOptions dataProtectionLevel="Private" />
+          </advancedOptions>
+          <option name="port" value="22" />
+        </fileTransfer>
+      </webServer>
+    </option>
+  </component>
+</project>

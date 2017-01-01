@@ -1,0 +1,615 @@
+﻿<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description"
+          content="女神衣衫為嚴選平價好穿的運動內衣和運動褲等,提供愛好運動的妳選購、團購,快為自己挑選動力加分的戰胞,一起自信穿.自在動～ http://goddess13.com">
+    <meta name="Keywords" content="運動內衣,運動褲,運動套裝,運動短褲,壓縮褲">
+    <meta http-equiv="Expires" content="0">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Cache-control" content="no-cache">
+    <meta http-equiv="Cache" content="no-cache">
+    <title>女神衣衫Goddess13</title>
+    <link href="__CSS__/bootstrap.min.css" rel="stylesheet">
+    <link href="__CSS__/index.css" rel="stylesheet">
+    <script src="__JS__/jquery.js"></script>
+    <script src="__JS__/index.js"></script>
+    <script src="__JS__/base_need.js"></script>
+    <script src="__JS__/bootstrap.min.js"></script>
+</head>
+<body onkeydown="clear();">
+<div class="container">
+    <div class="row">
+        <div class="col-xs-12 col-sm-12 col-md-12 text-left">
+            {$info.share_info.content|html_entity_decode}
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-xs-12 col-sm-12 col-md-12 logo">
+            <img src="{$info.logo}" class="logo_img"/>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-xs-12 col-sm-12 col-md-12 bordered">
+            <form class="time">
+                <fieldset>
+                    <legend>限時團購倒數中</legend>
+                    <div class="time-item">
+                        <label id="day_show">00</label><span>天</span>
+                        <label id="hour_show">00</label><span>時</span>
+                        <label id="minute_show">00</label><span>分</span>
+                        <label id="second_show">00</label><span>秒</span>
+                        <!--倒計時模块-->
+                    </div>
+                </fieldset>
+            </form>
+        </div>
+    </div>
+    <?php foreach($info['goods_list'] as $k=>$v) : ?>
+    <div class="row row-title bordered">
+        <div class="text-center">
+            <strong>{$v.name} {$v.discount}</strong>
+        </div>
+    </div>
+    <?php foreach($v['son'] as $g_k => $g_v) : ?>
+    <div class="row bordered row-product">
+        <!--preview start-->
+        <div class="col-xs-6 col-sm-6 col-md-6 preview preview{$k}_{$g_k}">
+            <div id="vertical" class="bigImg">
+                <img src="{$g_v.big_img}" id="midimg{$k}_{$g_k}" class="midimg"/>
+                <i class="icon-mag" title="图片可放大" style="display: inline;"></i>
+                <div style="display:none;" id="winSelector{$k}_{$g_k}" class="winSelector"></div>
+            </div><!--bigImg end-->
+            <div class="smallImg">
+                <input id="curProInfo{$k}_{$g_k}" type="hidden" value="{$g_v.id}" p_index="0" p_color="{$g_v['color_str']}">
+                <div class="scrollbutton smallImgUp disabled " id="smallImgUp{$k}_{$g_k}"></div>
+                <div id="imageMenu{$k}_{$g_k}" class="imageMenu">
+                    <ul>
+                        <?php foreach($g_v['img_src'] as $ik =>$img_src_v) :?>
+                        <li <?php if($ik == 0) echo 'class="onlickImg"'; ?>>
+                            <img src="{$img_src_v}" width="65" height="65" alt=""/></li>
+                        <?php endforeach;?>
+                    </ul>
+                </div>
+                <div class="scrollbutton smallImgDown <?php if(count($g_v['img_src'])<5):?>disabled<?php endif;?>" id="smallImgDown{$k}_{$g_k}"></div>
+            </div><!--smallImg end-->
+            <div id="bigView{$k}_{$g_k}" class="bigView" style="display:none;">
+              <img width="800" height="800" alt="" src=""/>
+               <!-- <img  alt="" src=""/>-->
+            </div>
+            <script>
+                var batch="<?php echo $k;?>";
+                var nowKey="<?php echo $g_k;?>";
+                create_pic_view(batch,nowKey);
+            </script>
+        </div>
+        <div class="col-xs-6 col-sm-6 col-md-6">
+            <table class="table table-p table-condensed" style="width:500px;">
+                <!--<tr>
+                    <td class="text-right">
+                        品項：
+                    </td>
+                    <td class="text-left">
+                       &lt;!&ndash; <span class="gno">{$v.name}</span>&ndash;&gt;
+                       <span class="gno"> <?php if($g_v['self_product_id']):?>
+                        {$g_v.self_product_id}.
+                        <?php endif;?>
+                        {$g_v.name}</span>
+                    </td>
+                </tr>-->
+                <tr style="font-size: 14pt;">
+                    <td class="text-right">
+                        尺寸：
+                    </td>
+                    <td>
+                        <select class="form-control" style="height:40px;" name="size" autocomplete="off">
+                            <option value="">&#45;&#45;請選擇尺寸&#45;&#45;</option>
+                            <?php foreach($g_v['size'] as $s_v) :?>
+                            <option value="{$s_v}">{$s_v}</option>
+                            <?php endforeach;?>
+                        </select>
+                        <input type="hidden" name="pname" value="pname{$k}_{$g_k}" autocomplete="off" data="{$g_v.name}" product_id="{$g_v.self_product_id}" autocomplete='off'>
+                    </td>
+                </tr>
+                <tr style="font-size: 14pt;">
+                    <td class="text-right">
+                        顏色：
+                    </td>
+                    <td>
+                        <select class="form-control" style="height:40px;" name="color" autocomplete="off">
+                            <option value="">&#45;&#45;請選擇顏色&#45;&#45;</option>
+                            <?php foreach($g_v['color'] as $s_v) :?>
+                            <option value="{$s_v}">{$s_v}</option>
+                            <?php endforeach;?>
+                        </select>
+                        <input type="hidden" name="pname" value="pname{$k}_{$g_k}" data="{$g_v.name}" data-key="{$k}_{$g_k}"
+                               data-bid="{$g_v.id}" autocomplete='off'>
+                    </td>
+                </tr>
+                <tr style="font-size: 14pt;">
+                    <td class="text-right">
+                        個數：
+                    </td>
+                    <td>
+                        <select class="form-control" style="height:40px;" name="num" autocomplete="off">
+                            <option value="">&#45;&#45;請選擇數量&#45;&#45;</option>
+                            <?php for($i=1;$i<=10;$i++) :?>
+                            <option value="{$i}">{$i}</option>
+                            <?php endfor;?>
+                        </select>
+                    </td>
+                </tr>
+                <tr>
+                   <!--<td class="text-right">
+                        &lt;!&ndash;簡介：&ndash;&gt;
+                    </td>-->
+                    <td colspan="2">
+                        <div class="text-left pro_desc"  contenteditable="true">
+                               {$g_v.info|html_entity_decode}
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="text-right col-md-3">
+                        品名：
+                    </td>
+                    <td class="pname{$k}_{$g_k} text-left p-name">
+                        <?php if($g_v['self_product_id']):?>
+                        {$g_v.self_product_id}.
+                        <?php endif;?>
+                        {$g_v.name}
+                    </td>
+                    <input type="hidden" class="pro-name" value="{$g_v.name}" autocomplete="off"/>
+                </tr>
+                <tr>
+                    <td colspan="2">
+                        <input type="hidden" value="{$g_v['img_src'][0]}" id="firstImg{$k}_{$g_k}"/>
+                        <button type="button" product_id="{$g_v.self_product_id}" pid="{$g_v.pid}" val="{$g_v.id}" price="{$g_v.price}"
+                                post_type="{$g_v.post_type}" goods_id="{$g_v.goods_id}"
+                                class="btn btn-font add_buy_car pull-right">加入購物車
+                        </button>
+                    </td>
+                </tr>
+            </table>
+        </div>
+        <!--preview end-->
+    </div>
+    <?php endforeach;?>
+    <?php endforeach;?>
+    <div class="row">
+        <table class="table table-bordered table-condensed bar-font" id="cartTable">
+            <thead>
+            <tr class="bg-info">
+                <th>產品圖片</th>
+                <th>產品名稱</th>
+                <th>數量</th>
+                <th>金額</th>
+                <th>移除</th>
+            </tr>
+            </thead>
+            <tbody id="buyCar">
+            <tr>
+                <td colspan="5">暫無商品</td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+    <div class="row">
+        <table class="table table-bordered table-condensed bar-font">
+            <tbody>
+            <tr>
+                <td width="30%" class="text-right"><span class="red-color">＊</span>郵寄方式：</td>
+                <td>
+                    <select name="post-type" class="form-control">
+                        <?php if($info['pp']) : ?>
+                        <?php echo $info['pp']['post'];?>
+                        <?php else : ?>
+                        <option value="">--請選擇--</option>
+                        <?php endif; ?>
+                    </select>
+                </td>
+            </tr>
+            <tr class="fwm" style="display: none;">
+                <td width="30%" class="text-right"><span class="red-color">＊</span>請輸入店舖號6碼：</td>
+                <td class="text-left">
+                    <input type="text" class="form-control" name="house_num" style="width:160px;display:inline;"
+                           autocomplete='off'/>(非服務編號) <a target="_blank"
+                                                         href="http://www.family.com.tw/mobile/wtb/shop_search.aspx" style="color:blue;font-weight:bold;text-decoration: underline;">全家門市查詢</a>
+                </td>
+            </tr>
+            <tr class="yj" style="display: none;">
+                <td width="30%" class="text-right"><span class="red-color">＊</span>郵寄地址：</td>
+                <td class="text-left">
+                    <select name="post-num" class="form-control" style="width:230px;display:inline">
+                        <option value="">郵遞區號</option>
+                        <?php foreach($info['citys'] as $city_num => $city_name):?>
+                        <option value="{$city_num}">{$city_num} {$city_name}</option>
+                        <?php endforeach;?>
+                    </select>
+                    <input type="text" class="form-control" name="post-name" style="width:350px;display:inline;"
+                           autocomplete='off'/>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+    <div class="row">
+        <table class="table table-bordered table-condensed bar-font">
+            <tbody>
+            <tr>
+                <td width="30%" class="text-right">折上折優惠券序號：</td>
+                <td class="text-left"><input type="text" name="youhuika" class="form-control"
+                                             style="width:200px;display:inline" autocomplete='off'/> <span
+                        class="btn btn-default btn-font" style="font-size: 16pt;" id="send_discount_no">送出</span></td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+    <div class="row">
+        <div class="panel panel-default buycar">
+            <!--<div class="panel-heading ">
+                <h3 class="panel-title text-center">{$info.sales_promotion.title|html_entity_decode}</h3>
+            </div>-->
+            {$info.sales_promotion.title|html_entity_decode}
+            <div class="panel-body" style="height:auto;">
+                <table class="table table-condensed">
+                    <tbody>
+                    <tr>
+                        <td class="text-right" style="width:50%;">小計：</td>
+                        <td class="text-left b-red xiaoji">{$info.pp.xiaoji|default=0}</td>
+                    </tr>
+                    <tr>
+                        <td class="text-right" style="width:50%;">數量：</td>
+                        <td class="text-left b-red"><span class="nums">{$info.pp.nums|default=0}</span>件</td>
+                    </tr>
+                    <tr>
+                        <td class="text-right" style="width:50%;">折扣：</td>
+                        <td class="text-left b-red zhekou"><?php if($info['pp']['zhekou']) echo '-' . $info['pp']['zhekou'];else echo 0;?></td>
+                    </tr>
+                    <tr>
+                        <td class="text-right" style="width:50%;">總計：</td>
+                        <td class="text-left b-red zongji">{$info.pp.zongji|default=0}</td>
+                    </tr>
+                    <tr>
+                        <td class="text-right" style="width:50%;">折上折優惠：</td>
+                        <td class="text-left b-red discount">0</td>
+                    </tr>
+                    <tr>
+                        <td class="text-right" style="width:50%;">運費：</td>
+                        <td class="text-left b-red yunfei">0</td>
+                        <input type="hidden" class="yunfei_input" value=""/>
+                    </tr>
+                    <tr>
+                        <td class="text-right" style="width:50%;">總金額：</td>
+                        <td class="text-left b-red total">{$info.pp.total|default=0}</td>
+                        <input type="hidden" name="totalMoney" value="0"/>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="panel panel-default user">
+            <div class="panel-heading">
+                <h3 class="panel-title text-center">訂購人資料</h3>
+            </div>
+            <div class="panel-body" style="height:auto;">
+                <table class="table table-condensed" style="border-right: none;">
+                    <tbody>
+                    <tr style="border:none;">
+                        <td class="text-right" style="width:30%;"><span class="red-color">＊</span>收件人：</td>
+                        <td class="text-left"><input type="text" class="form-control" name="username"
+                                                     autocomplete='off'/></td>
+                    </tr>
+                    <tr>
+                        <td class="text-right" style="width:30%;"><span class="red-color">＊</span>FB姓名：</td>
+                        <td class="text-left"><input type="text" name="fbname" class="form-control"
+                                                     style="width:220px;display:inline" autocomplete='off'/>※如有問題方便即時通知
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="text-right" style="width:30%;"><span class="red-color">＊</span>手機：</td>
+                        <td class="text-left"><input type="text" name="tel" class="form-control"
+                                                     style="width:220px;display:inline" autocomplete='off'/>範例：0914913943
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="text-right" style="width:30%;"><span class="red-color">＊</span>電子郵件：</td>
+                        <td class="text-left"><input type="text" name="email" class="form-control" autocomplete='off'/>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="text-right" style="width:30%;">備註：</td>
+                        <td class="text-left">
+                            <textarea class="form-control row-textarea" rows="5" name="uinfo"
+                                      autocomplete='off'></textarea>
+                            <span style="font-size:12pt;color:red;">※選擇郵局寄出者，收件時間可備註不可指定，如收件時間不固定，請選全家取貨付款。</span>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    <!--<p class="notice">注意事項：</p>
+    <p class="notice">1.此團購XX月XX日晚上23點59分結團，XX月XX日統一寄出，寄出會從FB社團公告。</p>
+    <p class="notice">2. 如不想等待請從社團依照網路價直購，不另享有團購價優惠，付款後3天內可寄出(不包含例假日)。</p>
+    <p class="notice">3. 運動衣褲大多為貼身衣褲，除本身有瑕疵或破損，廠商皆不給予退換，如可以接受才跟團喔～造成不便，請多見諒！^^</p>-->
+    {$info.attention_info.content|html_entity_decode}
+    <div class="row">
+        <div class="footer">
+            <div class="fleft">
+                <ul>
+                    <li><span class="red-color">＊</span><input type="checkbox" name="agree"> 我已閱讀上方注意事項並同意</li>
+                    <li>　<input type="checkbox" name="eagree"> 我同意訂閱開團的電子報通知</li>
+                </ul>
+            </div>
+            <div class="fright">
+                <img id="sendorder" src="__IMAGE__/button_1.png" val="{$info.pp.sendorder_val}"
+                     style="width:158px;height:50px;cursor:pointer;"/>
+            </div>
+        </div>
+    </div>
+    <div class="row" style="background-color: #FFECF5;font-size: 16pt;margin-top:50px;">
+        <table class="table table-bordered">
+            <tr>
+                <td>{$buttom_title[1]['title']}</td>
+                <td>{$buttom_title[2]['title']}</td>
+                <td>{$buttom_title[3]['title']}</td>
+            </tr>
+            <tr>
+                <td style="vertical-align:top;">
+                    <?php foreach($buttom_content[1] as $k=>$v):?>
+                    <a href="__URL__/tarUrl/id/{$v.id}" target="_blank">{$v.link_name}</a><br/>
+                    <?php endforeach;?>
+                </td>
+                <td style="vertical-align:top;">
+                    <?php foreach($buttom_content[2] as $k=>$v):?>
+                    {$v.content}
+                    <?php endforeach;?>
+                </td>
+                <td style="vertical-align:top;">
+                    <?php foreach($buttom_content[3] as $k=>$v):?>
+                    {$v.content}
+                    <?php endforeach;?>
+                </td>
+            </tr>
+        </table>
+    </div>
+    <div class="row" style="background-color: #F0F0F0;">
+        {$copyright.content}
+    </div>
+</div>
+<div class="modal fade bs-example-modal-sm" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog modal-sm" role="document" style="z-index: 9999;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                        aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title">提示消息</h4>
+            </div>
+            <div class="modal-body text-center">
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" style="font-size: 16pt;" data-dismiss="modal">關閉</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade bs-example-modal-sm" id="cartModel" tabindex="-1" role="dialog" aria-labelledby="cartModelLabel">
+    <div class="modal-dialog modal-sm" role="document" style="z-index: 9999;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                        aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title cart-title">提示消息</h4>
+            </div>
+            <div class="modal-body text-center cart-content">
+            </div>
+            <div class="modal-footer">
+                <a href="#cartTable" class="btn btn-success" id="toAccount">結算</a>
+                <button type="button" class="btn btn-success" style="font-size: 16pt;" data-dismiss="modal">繼續選購</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade bs-example-modal-lg" id="orderModel" tabindex="-1" role="dialog"
+     aria-labelledby="cartModelLabel">
+    <div class="modal-dialog modal-lg" role="document" style="z-index: 9999;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                        aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title order-title">訂單確認消息</h4>
+            </div>
+            <div class="modal-body text-center order-content">
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-success" style="font-size: 16pt;" id="orderConfirm">確認訂單</button>
+                <button type="button" class="btn btn-success" style="font-size: 16pt;" data-dismiss="modal">返回</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!--可以改為cdn的請求-->
+<script src="__JS__/timedown.js"></script>
+<script src="__JS__/cart.js"></script>
+<script src="__JS__/goddess.lang.js"></script>
+<script src="__JS__/goddess.base.js"></script>
+<script type="text/javascript">
+    var cartObj = null;
+    var activeTime = {$info['active_time']};
+    var rule_data = $.parseJSON('<?php echo $info["rule_data"];?>');
+    var post_rule = $.parseJSON('<?php echo $info["post_rule"];?>');
+    var intDiff = parseInt(activeTime);//倒计时总秒数量
+    var public_url = '__PUBLIC__/';
+    var post_url = '__URL__/getPostInfo/$ajax_type/1';
+    var get_order_url = '__URL__/getOrder';
+    var location_url = '__URL__/OrderInfo/orderNo/';
+    var check_discount_url = '__URL__/checkDiscount/$ajax_type/1';
+    var get_img_url = '__URL__/getColorImgs/$ajax_type/1';
+
+    timer(intDiff);
+    var goods_list = "<?php $info['goods_list'];?>";
+    //循環生成放大鏡效果
+/*    for (var i = 0; i <= batch; i++) {
+        console.log(nowKey+'_'+i)
+
+    }*/
+    $('#toAccount').click(function () {
+        $('#cartModel').modal('hide');
+    });
+    $('#send_discount_no').click(function () {
+        var quanRebate = 0;
+        var lastDiscount = 0;
+        var discountNo = $('input[name=youhuika]').val();//優惠券
+        if(discountNo == ''){
+            diaLog({'content':lang.add_discount_no});
+            return false;
+        }
+        quanRebate = checkQuan(check_discount_url, discountNo);
+        var zjMoney = $('.zongji').html();
+        if(zjMoney == 0){
+            diaLog({'content':lang.order_info_error})
+            return false;
+        }
+        //優惠券計算
+        if (quanRebate) {
+            lastDiscount = zjMoney *(1-(quanRebate/100));
+            lastDiscount = lastDiscount.toFixed(2);
+            lastDiscount = Math.round(lastDiscount);
+            if(lastDiscount>0){
+                $('.discount').html('-'+( lastDiscount));
+            }else{
+                $('.discount').html(lastDiscount);
+            }
+            yfMoney(post_rule);
+            var yunfei = $('.yunfei_input').val();
+            var totalMoney = (zjMoney - lastDiscount) + Number(yunfei);
+            $('.total').html(totalMoney);
+            $('input[name=totalMoney]').val(totalMoney);
+            diaLog({'content':lang.send_discount_success})
+        }
+    })
+    //提交订单
+    var orderObj = null;
+    $('#sendorder').on('click', function () {
+        var post_type = $('select[name=post-type]').val();
+        var house_num = $('input[name=house_num]').val();
+        var post_num = $('select[name=post-num]').val();
+        var post_name = $('input[name=post-name]').val();
+        var username = $('input[name=username]').val();
+        var fbname = $('input[name=fbname]').val();
+        var tel = $('input[name=tel]').val();
+        var email = $('input[name=email]').val();
+        var youhuika = $('input[name=youhuika]').val();
+        var agree = typeof $('input[name=agree]:checked').val() == 'string' ? 1 : 0;
+        var uinfo = $('textarea[name=uinfo]').val();
+        var eagree = typeof $('input[name=eagree]:checked').val() == 'string' ? 1 : 0;
+        var cartInfo = cartObj;
+        var xiaoji = $('.xiaoji').html();
+        var zk = $('.zhekou').html();
+        var zongji = $('.zongji').html();
+        var discount = $('.discount').html();
+        var totalMoney = $('input[name=totalMoney]').val();
+
+        var cartArr = new Array();
+        for (var i = 0; i < cartInfo.length; i++) {
+            cartArr.push({
+                first_img: cartInfo[i].first_img,
+                color: cartInfo[i].color,
+                gname: cartInfo[i].gname,
+                pro_name: cartInfo[i].pro_name,
+                goods_id: cartInfo[i].goods_id,
+                length: cartInfo[i].length,
+                num: cartInfo[i].num,
+                pid: cartInfo[i].pid,
+                post_type: cartInfo[i].post_type,
+                price: cartInfo[i].price,
+                size: cartInfo[i].size
+            });
+        }
+        var cartStr = JSON.stringify(cartArr);
+             orderObj = {
+            'post_type': post_type,
+            'house_num': house_num,
+            'post_num': post_num,
+            'post_name': post_name,
+            'username': username,
+            'fbname': fbname,
+            'tel': tel,
+            'email': email,
+            'youhuika': youhuika,
+            'cartInfo': cartStr,
+            'agree': agree,
+            'uinfo': uinfo,
+            'eagree': eagree,
+            'xiaoji': xiaoji,
+            'zk': zk,
+            'zongji': zongji,
+            'discount': discount,
+            'totalMoney': totalMoney,
+        };
+        if (!activeTime) {
+            diaLog({content: lang.sorry_time_no_arrive})
+            return false;
+        }
+        if (cartInfo.length <= 0) {
+            diaLog({content: lang.add_product_cart})
+            return false;
+        }
+        if (orderObj.post_type.length <= 0) {
+            diaLog({content: lang.add_post_type})
+            return false;
+        }
+        if (orderObj.post_type.substring(0, 6) == lang.home_post) {
+            if (orderObj.house_num.length <= 0) {
+                diaLog({content: lang.add_5_code})
+                return false;
+            }
+        } else {
+            if (orderObj.post_num.length <= 0) {
+                diaLog({content: lang.add_post_city})
+                return false;
+            }
+            if (orderObj.post_name.length <= 0) {
+                diaLog({content: lang.add_post_address})
+                return false;
+            }
+        }
+        if (orderObj.username.length <= 0) {
+            diaLog({content: lang.add_addressee})
+            return false;
+        }
+        if (orderObj.fbname.length <= 0) {
+            diaLog({content: lang.add_fb_name})
+            return false;
+        }
+        if (orderObj.tel.length <= 0) {
+            diaLog({content: lang.add_phone})
+            return false;
+        }
+        if (orderObj.email.length <= 0) {
+            diaLog({content: lang.add_email})
+            return false;
+        }
+        if (!orderObj.agree) {
+            diaLog({content: lang.add_agree})
+            return false;
+        }
+        // var flag    = confirm('請再次確認您的訂單信息' + "\n" + $('#sendorder').attr('val') + "\n" + '送出後如需修改請在結團前聯繫客服人員，請勿重複下單喔！');
+        //確認訂單信息
+        var orderDetail = orderDetailHtml(cartInfo);
+        orderLog({'content': orderDetail});
+    });
+    $('#orderConfirm').click(function () {
+        getOrder(get_order_url, orderObj, location_url);
+    })
+    getPostInfo(post_url);
+</script>
+</body>
+</html>
